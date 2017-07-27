@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Security Assesment</title>
+  <link href='style.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+        <h1 id="title"> Security Assessment </h1>
+        <h3>By: Stephanie Wong, April 2017</h3>
+
+        <h1>Introduction</h1>
+        <h3>
+                Notuber is an web application that matches a client to black cabs that are
+                available. The client will submit their username, longitude, and latitude to
+                the application which will then return the username, longitude, and latitude of
+                the 5 most recent black cab drivers and display them on the map.
+        </h3>
+
+        <h1>Methodology</h1>
+        <h3>
+                The first tests carried out were done in a "black box" manner, without seeing the source
+                code. I used Postman to carry out POST and GET requests. I then reviewed the source code
+                to look for more vulnerablities.
+        </h3>
+
+        <h1>Abstract of Findings</h1>
+        <h3>
+                The majority of the vulnerablities found came from trusting user input. User input is never
+                validated and thus creates opportunities for exploitation.
+        </h3>
+
+        <h1>Issues found</h1>
+        <h2> Database query injection:</h2>
+        <h3>
+                <p>
+                        <li>
+                                Location: the GET method /vehicle.json
+                        </li>
+                </p>
+                <p>
+                        <li>
+                        Description: Queries are not validated, so by using MongoDB queries instead of strings,
+                        i.e. using the input username[$ne]="swong02" to the path /vehicle.json
+                        I was able to get the information of the first vehicle that was in the
+                        database that did not have the username swong02.
+                        </li>
+                </p>
+                <p>
+                        <li>
+                        Severity: medium, luckily, the implementation only used findOne instead of findAll, so only
+                        the first document that matched the [$ne] was returned and not all of them.
+                        </li>
+                </p>
+
+                <p>
+                        <li>
+                        Resolution: Sanitizing and validating the user input would fix this problem by
+                        using the Validator module. The Validator module provided by NodeJS has a
+                        function escape() that will validate all data and remove anything malicious
+                        by replacing special characters with the HTML equivalent.
+                        </li>
+                </p>
+
+                <p>
+                        <li>
+                                Proof:
+                        </li>
+                        <img src="query.png" alt="query injection">
+                </p>
+
+        </h3>
+
+        <h2> Cross Site Scripting (XXS):</h2>
+        <h3>
+                <p>
+                        <li>
+                                Location: the POST method /submit
+                        </li>
+                </p>
+                <p>
+                        <li>
+                        Description: inputs are not validated, so by inserting a javascript script
+                        i.e. "<code>alert("hacked")</code>" to the path /submit
+                        I was able to insert this alert to the database so that every time someone
+                        else accesses the "/" route, it was run
+                        </li>
+                </p>
+                <p>
+                        <li>
+                        Severity: high, because instead of typing an alert script, one could have
+                        inserted a redirect to another html that could potentially look like a login
+                        page of some sort that the client could fall for and type in their details that would
+                        then be sent back to the hacker's server and thus their information would all be leaked.
+                        </li>
+                </p>
+
+                <p>
+                        <li>
+                        Resolution: Sanitizing and validating the user input would fix this problem by
+                        using the Validator module. The Validator module provided by NodeJS has a
+                        function escape() that will validate all data and remove anything malicious
+                        by replacing special characters with the HTML equivalent.
+                        </li>
+                </p>
+                <p>
+                        <li>
+                                Proof:
+                        </li>
+                        <img src="alert.png" alt="cross site scripting">
+                </p>
+
+        </h3>
+
+        <h2> Database flooding</h2>
+        <h3>
+                <p>
+                        <li>
+                                Location: the POST method, /submit
+                        </li>
+                </p>
+                <p>
+                        <li>
+                        Description: Inputs are not validated so a hacker could potentiall spam and flood
+                        the server with random inputs. Using a bash shell script, I flooded the database with random inputs
+                        through curl. This could potentially flood the database, causing it to crash. The shell script
+                        that I wrote was:
+                        </li>
+                        <img src="shell.png" alt="shell script for flooding">
+                </p>
+                <p>
+                        <li>
+                        Severity: medium, this could just be harmless and doesn't do anything particularly malicious. But
+                        by flooding the server, the website could crash.
+                        </li>
+                </p>
+
+                <p>
+                        <li>
+                        Resolution: Have a system for verifying logins, like a CAPTCHA system or requiring users to
+                        create an account.
+                        </li>
+                </p>
+
+                <p>
+                        <li>
+                                Proof:
+                        </li>
+                        <img src="floodTerminal.png" alt="terminal flooding">
+                        <img src="floodWeb.png" alt="website flooding">
+                </p>
+
+        </h3>
+
+        <h1>Conclusion</h1>
+        <h3>
+                There are a lot of security vulnerabilities to this website, but the suggestions made could
+                significantly help make this website more secure against basic attacks.These improvements
+                are all simple and easily implemented but will significantly increase the security of the website.
+        </h3>
+
+        <h1>References</h1>
+        <h3>
+                http://www.veracode.com/security/xss
+        </h3>
+
+</body>

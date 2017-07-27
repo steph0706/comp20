@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <title>Fail</title>
+        <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+        <h1 id="title">Fail</h1>
+
+        <video src="https://www.cs.tufts.edu/comp/20/fail.mp4" id="failvideo" controls></video>
+        <div id="lyrics"></div>
+
+        <div id="allButtons">
+                <button type="button" class="buttons" onclick="failvideo.play();">Play</button>
+                <button type="button" class="buttons" onclick="failvideo.pause();">Pause</button>
+                <button type="button" class="buttons" onclick="failvideo.currentTime = failvideo.currentTime - 1;">Rewind</button>
+                <button type="button" class="buttons" onclick="failvideo.currentTime = failvideo.currentTime + 1">Forward</button>
+        </div>
+
+        <script>
+
+                var caption = document.getElementById("lyrics");
+                var video = document.getElementById("failvideo");
+                
+                video.addEventListener("timeupdate", function() {
+                        if (video.currentTime < 12 && video.currentTime > 9) {
+                                caption.innerHTML = "<h3>You've got me feelin' emotions</h3>";
+                        } else if (video.currentTime > 13 && video.currentTime < 16) {
+                                caption.innerHTML = "<h3>Deeper than I've ever dreamed of</h3>";
+                        } else if (video.currentTime > 16 && video.currentTime < 21) {
+                                caption.innerHTML = "<h3>You've got me feelin' emotions</h3>";
+                        } else if (video.currentTime > 21 && video.currentTime < 25) {
+                                caption.innerHTML = "<h3>Higher than the heavens above</h3>";
+                        } else if (video.currentTime > 26 && video.currentTime < 30) {
+                                caption.innerHTML = "<h3>I feel good, I feel nice</h3>";
+                        } else if (video.currentTime > 30 && video.currentTime < 34) {
+                                caption.innerHTML = "<h3>I've never felt so satisfied</h3>";
+                        } else if (video.currentTime > 35 && video.currentTime < 37) {
+                                caption.innerHTML = "<h3>I'm in love, I'm alive</h3>";
+                        } else if (video.currentTime > 37 && video.currentTime < 42) {
+                                caption.innerHTML = "<h3>Intoxicated, flyin' high</h3>";
+                        } else if (video.currentTime > 44 && video.currentTime < 46) {
+                                caption.innerHTML = "<h3>Feels like a dream</h3>";
+                        } else if (video.currentTime > 46 && video.currentTime < 50) {
+                                caption.innerHTML = "<h3>When you touch me tenderly</h3>";
+                        } else if (video.currentTime > 50 && video.currentTime < 54) {
+                                caption.innerHTML = "<h3>I don't know if it's real</h3>";
+                        } else if (video.currentTime > 54 && video.currentTime < 58) {
+                                caption.innerHTML = "<h3>But I like the way I feel inside</h3>";
+                        }  else if (video.currentTime > 59 && video.currentTime < 63) {
+                                caption.innerHTML = "<h3>You've got me feelin' emotions</h3>";
+                        }  else if (video.currentTime > 63 && video.currentTime < 66) {
+                                caption.innerHTML = "<h3>Deeper than I've ever dreamed of</h3>";
+                        }  else if (video.currentTime > 67 && video.currentTime < 72) {
+                                caption.innerHTML = "<h3>You've got me feelin' emotions</h3>";
+                        }  else if (video.currentTime > 72 && video.currentTime < 76) {
+                                caption.innerHTML = "<h3>Higher than the heavens above</h3>";
+                        } else {
+                                caption.innerHTML= "";
+                        }
+                
+                }, false); 
+        </script>
+</body>
+</html> 
+

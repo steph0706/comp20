@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Black Car Service</title>
+    <link rel="stylesheet" href="style.css"/>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <script>
+        var map;
+        myLat = 0;
+        myLng = 0;
+
+        function getMyLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    myLat = position.coords.latitude;
+                    myLng = position.coords.longitude;
+                    console.log(myLat);
+                    renderMap();
+              });
+            }
+            else {
+                alert("Geolocation is not supported by your browser");
+            }
+        }
+        var xhr = new XMLHttpRequest();
+        var url = "https://mysterious-meadow-63125.herokuapp.com/submit"
+        var param = "username=IR5n7nOy&lat=" + myLat + "&lng=" + myLng;
+        var response;
+        var drivers = [];
+        var people = [];
+        xhr.open("POST", url, true);
+
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        function renderMap() {
+            me = new google.maps.LatLng(myLat, myLng);
+
+            map.panTo(me);
+
+            // Create a marker
+            marker = new google.maps.Marker({
+                position: me,
+                title: "IR5n7nOy" + "<p>" + "Here I am!" + "</p>"
+            });
+            addInfoWindow(marker, marker.title);
+            marker.setMap(map);
+            getCars();
+
+        }
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 42.5, lng: -71.2},
+                zoom: 14
+            });
+            getMyLocation();
+        }
+
+        function getCars() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    response = xhr.responseText;
+                    console.log(response);
+                    var parsed = JSON.parse(response);
+                    var carURL = 'https://tuftsdev.github.io/WebProgramming/assignments/black_car.png';
+                    var persURL = 'https://img.clipartfest.com/d86bccfa5e9e4a89a2e891deda02f81c_-person-icon-people-icon-clipart_2000-2129.png';
+                    if (parsed.vehicles) {
+                        for (count = 0; count < parsed.vehicles.length; count++) {
+                            drivers[count] = parsed.vehicles[count];
+                            var LatLng = {lat: drivers[count].lat, lng: drivers[count].lng};
+                            var dist = calcDist(drivers[count].lat, drivers[count].lng, myLat, myLng);
+                            info = drivers[count].username + '<p>' + 'distance: ' + dist + ' miles' + '</p>';
+                            addMarkerCar(LatLng, map, info, carURL);
+                        }
+                    }
+                    else if  (parsed.passengers) {
+                        isCar = false;
+                        for (count = 0; count < parsed.passengers.length; count++) {
+                            people[count] = parsed.passengers[count];
+                            var LatLng = {lat: people[count].lat, lng: people[count].lng};
+                            var dist = calcDist(people[count].lat, people[count].lng, myLat, myLng);
+                            info = people[count].username + '<p>' + 'distance: ' + dist + ' miles' + '</p>';
+
+                            addMarkerPeople(LatLng, map, info, persURL);
+                        }
+                    }
+                }
+        };
+
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        }
+
+        function calcDist(driverLat, driverLon, myLat, myLng) {
+
+            var R = 3959; // miles
+
+            var x1 = driverLat-myLat;
+            var dLat = x1.toRad();
+            var x2 = driverLon-myLng;
+            var dLon = x2.toRad();
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                            Math.cos(myLat.toRad()) * Math.cos(driverLat.toRad()) *
+                            Math.sin(dLon/2) * Math.sin(dLon/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var dist = R * c;
+            return dist.toFixed(2);
+        }
+
+        function addMarkerPeople(location, map, info, imageurl, isCar) {
+            var message = info;
+            var image = {
+                url: imageurl,
+                scaledSize: new google.maps.Size(50, 50),
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(0, 0)
+            };
+
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                icon: image,
+
+            });
+
+            addInfoWindow(marker, message);
+        }
+        function addMarkerCar(location, map, info, imageurl, isCar) {
+            var message = info;
+            var image = {
+                url: imageurl,
+                scaledSize: new google.maps.Size(50, 30),
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(0, 0)
+            };
+
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                icon: image,
+
+            });
+
+            addInfoWindow(marker, message);
+        }
+        var prev_infowindow =false;
+
+        function addInfoWindow(marker, message) {
+            var infoWindow = new google.maps.InfoWindow({
+                content: message
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                if (prev_infowindow) {
+                    prev_infowindow.close();
+                }
+                prev_infowindow = infoWindow;
+                infoWindow.open(map, marker);
+            });
+        }
+
+        xhr.send(param);
+
+    </script>
+
+  </head>
+  <body onload="getMyLocation()">
+    <h1> The Black Car Service </h1>
+    <div id="map"></div>
+
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCStWtM5NqyHJDYPGHQ0-h8QSADEAckESw&callback=initMap">
+    </script>
+
+  </body>
+</html>

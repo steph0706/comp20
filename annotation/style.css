@@ -1,0 +1,43 @@
+#title {
+        font-size: 30px;
+        font-family: Raleway;
+        text-align: center;
+}
+
+video {
+        display: block;
+        margin: 0 auto;
+}
+
+
+#allButtons {
+        position: relative;
+        text-align: center;
+
+        vertical-align: middle;
+
+}
+
+.buttons {
+        background-color: #e3e9f2;
+        border: none;
+        padding: 5px;
+        display: inline-block; 
+        text-align: center;
+        font-family: 'Helvetica';
+
+
+}
+
+.buttons:hover {
+    background-color: grey;
+    color: white;
+}
+
+#lyrics {
+        font-size: 12px;
+        font-family: 'Helvetica';
+        height: 20px;
+        text-align: center;
+        margin: 5px;
+}
