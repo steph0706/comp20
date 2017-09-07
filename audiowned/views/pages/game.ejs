@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Audiowned</title>
+    <!-- <meta http-equiv="refresh" content="3"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/animations.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/gamestyle.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.6.1/dist/progressbar.js"></script>
+    <script>
+        var round = 1;
+        var date;
+        var counter = 1;
+        var index = 0;
+        var used = [];
+        var used = new Array(10);
+        var bar;
+        var correctPos;
+        var timer;
+        var player = null;
+        var song;
+
+        $(document).ready(function(){
+            date = new Date();
+            for (var i = 0; i < used.length; i++) {
+                used[i] = 0;
+            }
+            date = new Date();
+            bar = new ProgressBar.Line(progress, {
+                    strokeWidth: 4,
+                    duration: 10000,
+                    color: '#FFEA82',
+                    trailColor: '#eee',
+                    trailWidth: 1,
+                    svgStyle: {width: '100%', height: '100%'},
+                    from: {color: '#5AFE32'},
+                    to: {color: '#FA483F'},
+                    step: (state, bar) => {
+                    bar.path.setAttribute('stroke', state.color);
+                }
+            });
+            bar.animate(1.0);
+        });
+        function sendChoice(num) {
+            if (round == 8) {
+                $("#gamePage").addClass('animated slideOutRight');
+                 setTimeout(function(){
+        		 	if (newScore >= user_score){
+        				window.location.href='/win';
+        			}
+        			else {
+        				window.location.href='/lose';
+        			}
+                 }, 800);
+            }
+            round++;
+            document.getElementById('loadheader').innerHTML = "ROUND " + round;
+            bar.set(0.0);
+            bar.animate(1.0);
+            var currTime = new Date();
+            var time = Math.floor((currTime.getTime() - date.getTime()) / 1000);
+            var score = 0;
+            var oldScore = 0;
+            var newScore = 0;
+            if (num == correctPos) {
+                score = 100 - time;
+                oldScore = document.getElementById('ownScore').innerHTML.split(' ')[1];
+                newScore = parseInt(oldScore) + score;
+                document.getElementById('ownScore').innerHTML = "SCORE: " + newScore;
+        } else {
+                newScore = parseInt(oldScore);
+        }
+            $.ajax({
+                type: "POST",
+                url: "/submit",
+                data: {
+                    "score": newScore,
+                    "round": round,
+                    "song": song
+                },
+
+                statusCode: {
+                        200: function(res){
+        			player.pause();
+        	                date = new Date();
+        	                playmusic();
+        			user_score = res['score'];
+        			document.getElementById('oppScore').innerHTML = "SCORE: " + user_score;
+                        }
+                }
+
+                },
+                error: function(a, b, c) {
+                    console.log(c);
+                    // counter++;
+                    // player.pause();
+                }
+            });
+        };
+        function getRandomNums(len, max) {
+            var arr = [];
+            while (arr.length < len){
+                var randomnumber = Math.ceil(Math.random() * max)
+                if (arr.indexOf(randomnumber) > -1) {
+                    continue;
+                }
+                arr[arr.length] = randomnumber;
+            }
+            return arr;
+        }
+        function playmusic() {
+            // newBar();
+            if (player != null) {
+                player.pause();
+            }
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                   sendChoice(10);
+            }, 10000);
+
+
+            $("#buttons").addClass('animated slideInLeft');
+            var songs = JSON.parse(htmlDecode("<%= JSON.stringify(MUSIC) %>"));
+            /* get four random numbers in 0 to 39
+             * the correct song will be at index 0 */
+            arr = getRandomNums(4, 39);
+            counter = arr[0];
+            /* get a random song that hasn't been played before */
+            if (index != 0) {
+                while (used.indexOf(counter) != -1) {
+                    arr = getRandomNums(4, 39);
+                    counter = arr[0];
+                }
+            }
+            /* store the song in the used collection so that it isn't replayed */
+            used[index] = counter;
+            index++;
+            player = new Audio(songs[counter].url);
+            song = songs[counter].name;
+            console.log(songs[counter].name);
+            /* randomly choose the position in the list of songs */
+            correctPos = getRandomInt(1, 4);
+            switch (correctPos) {
+                case 1:
+                    document.getElementById("song1").innerHTML = songs[counter].name;
+                    document.getElementById("song2").innerHTML = songs[arr[1]].name;
+                    document.getElementById("song3").innerHTML = songs[arr[2]].name;
+                    document.getElementById("song4").innerHTML = songs[arr[3]].name;
+                    break;
+                case 2:
+                    document.getElementById("song2").innerHTML = songs[counter].name;
+                    document.getElementById("song1").innerHTML = songs[arr[1]].name;
+                    document.getElementById("song3").innerHTML = songs[arr[2]].name;
+                    document.getElementById("song4").innerHTML = songs[arr[3]].name;
+                    break;
+                case 3:
+                    document.getElementById("song3").innerHTML = songs[counter].name;
+                    document.getElementById("song2").innerHTML = songs[arr[1]].name;
+                    document.getElementById("song1").innerHTML = songs[arr[2]].name;
+                    document.getElementById("song4").innerHTML = songs[arr[3]].name;
+                    break;
+                case 4:
+                    document.getElementById("song4").innerHTML = songs[counter].name;
+                    document.getElementById("song2").innerHTML = songs[arr[1]].name;
+                    document.getElementById("song3").innerHTML = songs[arr[2]].name;
+                    document.getElementById("song1").innerHTML = songs[arr[3]].name;
+                    break;
+                default:
+                    break;
+            }
+            player.autoplay = true;
+        }
+        function htmlDecode(input){
+            var e = document.createElement('div');
+            e.innerHTML = input;
+            return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+        }
+        function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+       </script>
+
+</head>
+
+<div id="gamePage" >
+<body onload="playmusic()" class="animated slideInLeft">
+        <header>
+              <h1 id="loadheader">ROUND 1</h1>
+        </header>
+        <div id="pics">
+                <div id="userpic">
+                    <img src=<%=player_pic%> alt="user profile" width="150px">
+                </div>
+                <div id="progress"></div>
+                <div id="opppic">
+                        <img src="<%=opppic%>" alt="l8k8" width="150px">
+                </div>
+        </div>
+        <div id="scores">
+                <h3 id="ownScore">SCORE: 0</h3>
+                <h3 id="oppScore">SCORE: 0<oppScore> </h3>
+        </div>
+
+        <div id="buttons" class="slideInLeft">
+                <div>
+                     <button class="button" onclick="sendChoice(1)" id="song1"> song 1</button>
+                </div>
+                <div>
+                    <button class="button" onclick="sendChoice(2)" id="song2"> song 2 </button>
+                </div>
+                <div>
+                    <button class="button" onclick="sendChoice(3)" id="song3"> song 3 </button>
+                </div>
+                <div>
+                    <button class="button" onclick="sendChoice(4)" id="song4"> song 4 </button>
+                </div>
+
+        </div>
+        </div>
+
+</body>
+</html>

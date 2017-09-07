@@ -1,0 +1,136 @@
+/* stylesheet */
+body {
+	/*background-image: url("bg.gif");*/
+	/*background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	background-size: cover;*/
+        background-color: black;
+	font-family: "Century Gothic ", sans-serif;
+        font-size: 30px;
+        font-color: white;
+	color: #eafffd;
+}
+
+h3 {
+        display: none;
+        font-family: 'Comic Sans';
+}
+h1 {
+        font-family: "Source Code Pro", sans-serif;
+        font-weight: lighter;
+        font-size: 60px;
+        font-color: white;
+        text-align: center;
+        letter-spacing: 8px;
+        margin-top: 200px;
+        margin-bottom: 20px;
+}
+
+#start {
+        background: black;
+        border: 1px solid white;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-family: "Source Code Pro", sans-serif;
+        font-weight: lighter;
+        font-size: 20px;
+        color: white;
+        text-align: center;
+        letter-spacing: 3px;
+}
+
+#start:hover {
+        background-color: white;
+        color: black;
+}
+
+.button {
+        background: black;
+        border: 1px solid white;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-family: "Source Code Pro", sans-serif;
+        font-weight: lighter;
+        font-size: 15px;
+        color: white;
+        text-align: center;
+        letter-spacing: 3px;
+}
+
+.button:hover {
+        background-color: white;
+        color: black;
+}
+
+.open>.dropdown-menu {
+        background-color: white;
+        font-family: "Source Code Pro", sans-serif;
+        font-weight: lighter;
+        width: 5px;
+}
+
+nav {
+        text-align: center;
+}
+
+
+#loadheader {
+        margin-top: 30px;
+        margin-left: 20px;
+        overflow: hidden;
+        position: relative;
+        text-align: center;
+        font-size: 35px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+
+}
+
+#userimage {
+        width: 350px;
+        height: 350px;
+        overflow: hidden;
+        margin-top: 20px;
+        margin: 20px;
+        margin-left: 20%;
+        position: relative;
+        float: left;
+}
+#oppimage {
+        width: 350px;
+        height: 350px;
+        margin-top: 20px;
+        overflow: hidden;
+        margin-left: 40px;
+        position: relative;
+        float: left;
+}
+
+img {
+        position: absolute;
+        min-height: 100%;
+        min-width: 100%;
+        left: -100%;
+        right: -100%;
+        top: -100%;
+        bottom: -100%;
+        margin: auto;
+        height: 350px;
+        width: auto;
+}
+
+
+#loading-page {
+        display: none;
+}
+
+#songs {
+		font-family: "Source Code Pro", sans-serif;
+		font-weight: lighter;
+		font-size: 20px;
+		font-color: white;
+		text-align: center;
+		letter-spacing: 3px;
+		padding-top: 20px;
+}

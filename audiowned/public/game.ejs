@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <title>Audiowned</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/animations.css" type="text/css" />
+        <link rel="stylesheet" href="css/gamestyle.css" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+       <script src="js/bootstrap.min.js"></script>
+       <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.6.1/dist/progressbar.js"></script>
+       <script src="js/gameplay.js"/>
+</head>
+
+<body>
+        <div id="gamePage">
+        <header>
+		        <h1 id="loadheader">ROUND 3</h1>
+        </header>
+        <div id="pics">
+                <div id="userpic">
+                        <img src="https://scontent.fluk1-1.fna.fbcdn.net/v/t31.0-8/16707354_1270731589629046_5534878168568381697_o.jpg?oh=51f6c7e662abb9b9ad3e9d619ab21f88&oe=59556726" alt="l8k8" width=150px>
+                </div>
+                <div id="progress"></div>
+                <div id="opppic">
+                        <img src="http://eadb.org/wp-content/uploads/2015/08/profile-placeholder.jpg" alt="placeholder" width=150px>
+                </div>
+        </div>
+        <div id="scores">
+                <h3 id="ownScore">SCORE: <%=ownScore=> </h3>
+                <h3 id="oppScore">SCORE: <%=oppScore=> </h3>
+        </div>
+        <div id="buttons">
+                <div>
+                     <button class="button" onclick="sendChoice(1)" > <%=Song1%></button>
+                </div>
+                <div>
+                    <button class="button" onclick="sendChoice(2)" > <%=Song2%> </button>
+                </div>
+                <div>
+                    <button class="button" onclick="sendChoice(3)" > <%=Song3%> </button>
+                </div>
+                <div>
+                    <button class="button" onclick="sendChoice(4)" > <%=Song3%> </button>
+                </div>
+        </div>
+        </div>
+</body>
+</html>
